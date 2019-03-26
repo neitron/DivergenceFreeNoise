@@ -1,6 +1,6 @@
 # DivergenceFreeNoise
 
-In #unity3d Divergence-free noise based on the paper by Ivan DeWolf:
+In Unity3D Divergence-free noise based on the paper by Ivan DeWolf:
 https://www.academia.edu/18125534/Divergence-Free_Noise?source=swp_share
 
 <p float="left">
