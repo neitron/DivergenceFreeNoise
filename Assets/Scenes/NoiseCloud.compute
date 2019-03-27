@@ -1,0 +1,90 @@
+﻿
+#include "UnityCG.cginc"
+#include "SimplexNoise3D.cginc"
+
+
+
+RWStructuredBuffer<float3> PositionBuffer;
+RWStructuredBuffer<float2> ScaleBuffer;
+
+
+float3 _offset;
+float3 _borders;
+float3 _size;
+float _scale;
+float _speed;
+float _maxSpeed;
+
+
+#pragma kernel Update
+[numthreads(1024, 1, 1)]
+void Update (uint3 id : SV_DispatchThreadID)
+{
+	float3 position = PositionBuffer[id.x];
+
+	float3 grad = snoise(float3(
+		position.x * _scale + _Time.x * _offset.x,
+		position.y * _scale + _Time.x * _offset.y,
+		position.z * _scale + _Time.x * _offset.z)
+	).xyz;
+	/*
+	float3 grad1 = snoise(float3(
+		position.x * _scale + _Time.x * _offset.x,
+		position.y * _scale + _Time.x * _offset.y,
+		position.z * _scale + _Time.x * _offset.z
+	) + float3(15.3f, 13.1f, 17.4f)).xyz;
+	*/
+	float3 grad1 = snoise(float3(
+		position.x * _scale,
+		position.y * _scale,
+		position.z * _scale
+	) + float3(15.3f, 13.1f, 17.4f)).xyz;
+
+
+	grad = cross(grad, grad1);
+
+	if (position.x >= _size.x - _borders.x)
+	{
+		grad = lerp(grad, -position * 10, position.x - (_size.x - _borders.x));
+	}
+	else if (position.x <= -_size.x + _borders.x)
+	{
+		grad = lerp(grad, -position * 10, -position.x - (_size.x - _borders.x));
+	}
+	if (position.y <= -_size.y + _borders.y)
+	{
+		grad = lerp(grad, -position * 10, -position.y - (_size.y - _borders.y));
+	}
+	else if (position.y >= _size.y - _borders.y)
+	{
+		grad = lerp(grad, -position * 10, position.y - (_size.y - _borders.y));
+	}
+	if (position.z <= -_size.z + _borders.z)
+	{
+		grad = lerp(grad, -position * 10, -position.z - (_size.z - _borders.z));
+	}
+	else if (position.z >= _size.z - _borders.z)
+	{
+		grad = lerp(grad, -position * 10, position.z - (_size.z - _borders.z));
+	}
+
+
+	ScaleBuffer[id.x].y -= unity_DeltaTime.x;
+	float scale = ScaleBuffer[id.x].x + lerp(-1, 1, ScaleBuffer[id.x].y > 0) * lerp(0.0f, 0.002f, _speed > 0.0f);
+	ScaleBuffer[id.x].x = scale;
+	
+	float3 velocity = normalize(grad) * clamp(length(grad) * _speed , 0.0f, _maxSpeed) * unity_DeltaTime.x; // * (2 - scale * 10)
+
+	PositionBuffer[id.x] += velocity;
+	
+	if (ScaleBuffer[id.x].x < 0.0f)
+	{
+		PositionBuffer[id.x] += snoise(float3(
+			position.x * _scale + _Time.x * _offset.x,
+			position.y * _scale + _Time.x * _offset.y,
+			position.z * _scale + _Time.x * _offset.z)
+		).xyz * 0.1f;
+		ScaleBuffer[id.x].x = 0.0;
+		ScaleBuffer[id.x].y = 4.0;
+	}
+}
