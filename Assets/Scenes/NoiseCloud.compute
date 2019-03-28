@@ -83,7 +83,7 @@ void Update (uint3 id : SV_DispatchThreadID)
 			position.x * _scale + _Time.x * _offset.x,
 			position.y * _scale + _Time.x * _offset.y,
 			position.z * _scale + _Time.x * _offset.z)
-		).xyz * 0.1f;
+		).xyz * 0.01f;
 		ScaleBuffer[id.x].x = 0.0;
 		ScaleBuffer[id.x].y = 4.0;
 	}

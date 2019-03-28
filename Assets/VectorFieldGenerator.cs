@@ -47,6 +47,8 @@ public class VectorFieldGenerator : MonoBehaviour
     private ComputeBuffer _positionsBuffer;
     private ComputeBuffer _scaleBuffer;
 
+
+
     private Texture2D GeneratePerlinTexture(Vector2Int size)
     {
         Texture2D texture = new Texture2D(size.x, size.y)
@@ -146,8 +148,12 @@ public class VectorFieldGenerator : MonoBehaviour
 
 		_scales[0] = new Vector2(_rendererTransform.localScale.x, lifetime);
 		_rendererTransform.parent = transform;
+			var ps = _rendererTransform.GetComponentInChildren<ParticleSystem>();
+			var main = ps.main;
 		for (int i = 1; i < _instances + 1; i++)
 		{
+			main.startColor = UnityEngine.Random.ColorHSV(0, 0.9f, 0.8f, 0.9f, 0.4f, 0.5f);
+
 			Transform t = Instantiate(_rendererTransform.gameObject, UnityEngine.Random.insideUnitSphere,
 				Quaternion.identity, transform).transform;
 
@@ -157,6 +163,7 @@ public class VectorFieldGenerator : MonoBehaviour
 			float scale = UnityEngine.Random.value * t.localScale.x;
 			_scales[i] = new Vector2(scale, lifetime);
 			t.localScale = scale * Vector3.one;
+
 		}
 
 		UpdateBuffers();
