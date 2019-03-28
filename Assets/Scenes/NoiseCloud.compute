@@ -17,7 +17,7 @@ float _maxSpeed;
 
 
 #pragma kernel Update
-[numthreads(1024, 1, 1)]
+[numthreads(8, 1, 1)]
 void Update (uint3 id : SV_DispatchThreadID)
 {
 	float3 position = PositionBuffer[id.x];
@@ -70,7 +70,7 @@ void Update (uint3 id : SV_DispatchThreadID)
 
 
 	ScaleBuffer[id.x].y -= unity_DeltaTime.x;
-	float scale = ScaleBuffer[id.x].x + lerp(-1, 1, ScaleBuffer[id.x].y > 0) * lerp(0.0f, 0.002f, _speed > 0.0f);
+	float scale = ScaleBuffer[id.x].x + lerp(-1, 1, ScaleBuffer[id.x].y > 0) * lerp(0.0f, 0.005f, _speed > 0.0f);
 	ScaleBuffer[id.x].x = scale;
 	
 	float3 velocity = normalize(grad) * clamp(length(grad) * _speed , 0.0f, _maxSpeed) * unity_DeltaTime.x; // * (2 - scale * 10)
@@ -85,6 +85,6 @@ void Update (uint3 id : SV_DispatchThreadID)
 			position.z * _scale + _Time.x * _offset.z)
 		).xyz * 0.1f;
 		ScaleBuffer[id.x].x = 0.0;
-		ScaleBuffer[id.x].y = 4.0;
+		ScaleBuffer[id.x].y = 2.0;
 	}
 }

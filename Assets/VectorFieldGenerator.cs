@@ -30,6 +30,7 @@ public class VectorFieldGenerator : MonoBehaviour
 
 	[Header("Renderer")]
     [SerializeField] private Transform _rendererTransform;
+    [SerializeField] private MeshRenderer _raymarchRenderer;
     [SerializeField] private int _instances;
     [SerializeField] private float _speedFactor;
     [SerializeField] private float _maxSpeed;
@@ -133,30 +134,49 @@ public class VectorFieldGenerator : MonoBehaviour
     }
 
 
-    private void Start()
-    {
-	    _renderers = new List<Transform>();
-		_positions = new Vector3[_instances + 1];
-		_scales = new Vector2[_instances + 1];
+	//  private void Start()
+	//  {
+	//   _renderers = new List<Transform>();
+	//_positions = new Vector3[_instances + 1];
+	//_scales = new Vector2[_instances + 1];
 
-		_renderers.Add(_rendererTransform);
-		_positions[0] = _rendererTransform.position;
+	//_renderers.Add(_rendererTransform);
+	//_positions[0] = _rendererTransform.position;
+
+	//float lifetime = 2.0f;
+
+	//_scales[0] = new Vector2(_rendererTransform.localScale.x, lifetime);
+	//_rendererTransform.parent = transform;
+	//for (int i = 1; i < _instances + 1; i++)
+	//{
+	//	Transform t = Instantiate(_rendererTransform.gameObject, UnityEngine.Random.insideUnitSphere,
+	//		Quaternion.identity, transform).transform;
+
+	//	_renderers.Add(t);
+	//	_positions[i] = t.position;
+
+	//	float scale = UnityEngine.Random.value * t.localScale.x;
+	//	_scales[i] = new Vector2(scale, lifetime);
+	//	t.localScale = scale * Vector3.one;
+	//}
+
+	//UpdateBuffers();
+	//}
+
+
+	private void Start()
+    {
+	    _positions = new Vector3[_instances];
+		_scales = new Vector2[_instances];
 
 		float lifetime = 2.0f;
 
-		_scales[0] = new Vector2(_rendererTransform.localScale.x, lifetime);
-		_rendererTransform.parent = transform;
-		for (int i = 1; i < _instances + 1; i++)
+		for (int i = 0; i < _instances; i++)
 		{
-			Transform t = Instantiate(_rendererTransform.gameObject, UnityEngine.Random.insideUnitSphere,
-				Quaternion.identity, transform).transform;
+			_positions[i] = UnityEngine.Random.insideUnitSphere;
 
-			_renderers.Add(t);
-			_positions[i] = t.position;
-
-			float scale = UnityEngine.Random.value * t.localScale.x;
+			float scale = UnityEngine.Random.value * 10;
 			_scales[i] = new Vector2(scale, lifetime);
-			t.localScale = scale * Vector3.one;
 		}
 
 		UpdateBuffers();
@@ -167,9 +187,9 @@ public class VectorFieldGenerator : MonoBehaviour
     {
 		ReleaseBuffers();
 
-	    _positionsBuffer = new ComputeBuffer(_renderers.Count, 12);
+	    _positionsBuffer = new ComputeBuffer(_instances, 12);
 	    _positionsBuffer.SetData(_positions);
-	    _scaleBuffer = new ComputeBuffer(_renderers.Count, 8);
+	    _scaleBuffer = new ComputeBuffer(_instances, 8);
 	    _scaleBuffer.SetData(_scales);
 	}
 
@@ -179,6 +199,8 @@ public class VectorFieldGenerator : MonoBehaviour
 	    _speed = Input.GetAxis("Horizontal") * _speedFactor;
 
 		UpdatePositions(_speed);
+
+		_raymarchRenderer.sharedMaterial.SetBuffer("PositionsBuffer", _positionsBuffer);
 
 	    //foreach (Transform rt in _renderers)
 	    //{
@@ -212,16 +234,16 @@ public class VectorFieldGenerator : MonoBehaviour
 		_updater.SetFloat("_speed", speed);
 		_updater.SetFloat("_maxSpeed", _maxSpeed);
 		
-		_updater.Dispatch(updater, _positions.Length / 1024, 1, 1);
+		_updater.Dispatch(updater, _instances / 8, 1, 1);
 
-		_positionsBuffer.GetData(_positions);
-		_scaleBuffer.GetData(_scales);
+		//_positionsBuffer.GetData(_positions);
+		//_scaleBuffer.GetData(_scales);
 
-		for (int i = 0; i < _renderers.Count; i++)
-		{
-			_renderers[i].position = _positions[i];
-			_renderers[i].localScale = Vector3.one * _scales[i].x;
-		}
+		//for (int i = 0; i < _renderers.Count; i++)
+		//{
+		//	_renderers[i].position = _positions[i];
+		//	_renderers[i].localScale = Vector3.one * _scales[i].x;
+		//}
     }
 
 
