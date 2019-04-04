@@ -36,8 +36,7 @@
 		
 		#ifdef SHADER_API_D3D11
 			StructuredBuffer<float3> PositionsBuffer; // this actually works after all!      
-			StructuredBuffer<float2> ScaleBuffer; // this actually works after all!      
-			//uniform RWStructuredBuffer<float2> ScaleBuffer;
+			StructuredBuffer<float2> ScaleBuffer; // this actually works after all!
 		#endif
         
 		struct Input
@@ -60,89 +59,62 @@
         UNITY_INSTANCING_BUFFER_END(Props)
 
 
-		float dropSetOf16(float3 p)
+		float dropSetOf8()
+		{
+		
+		}
+
+		float dropSetOf16(float3 p, int i)
 		{
 			float scene = 999999999; //sphereSDF(p, 0.1f);
 			
 			#ifdef SHADER_API_D3D11
 			
-				float3 pos = p + PositionsBuffer[0];
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[0].x), _Settings.w);
-				pos = p + PositionsBuffer[1];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[1].x), _Settings.w);
-				pos = p + PositionsBuffer[2];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[2].x), _Settings.w);
-				pos = p + PositionsBuffer[3];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[3].x), _Settings.w);
-														  
-				pos = p + PositionsBuffer[4];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[4].x), _Settings.w);
-				pos = p + PositionsBuffer[5];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[5].x), _Settings.w);
-				pos = p + PositionsBuffer[6];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[6].x), _Settings.w);
-				pos = p + PositionsBuffer[7];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[7].x), _Settings.w);
-			
-				// 8
-
-				pos = p + PositionsBuffer[8];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[8].x), _Settings.w);
-				pos = p + PositionsBuffer[9];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[9].x), _Settings.w);
-				pos = p + PositionsBuffer[10];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[10].x), _Settings.w);
-				pos = p + PositionsBuffer[11];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[11].x), _Settings.w);
-			
-				pos = p + PositionsBuffer[12];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[12].x), _Settings.w);
-				pos = p + PositionsBuffer[13];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[13].x), _Settings.w);
-				pos = p + PositionsBuffer[14];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[14].x), _Settings.w);
-				pos = p + PositionsBuffer[15];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[15].x), _Settings.w);
-			
-				// 16
-
-				pos = p + PositionsBuffer[16];
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[0].x), _Settings.w);
-				pos = p + PositionsBuffer[17];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[1].x), _Settings.w);
-				pos = p + PositionsBuffer[18];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[2].x), _Settings.w);
-				pos = p + PositionsBuffer[19];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[3].x), _Settings.w);
-														  
-				pos = p + PositionsBuffer[20];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[4].x), _Settings.w);
-				pos = p + PositionsBuffer[21];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[5].x), _Settings.w);
-				pos = p + PositionsBuffer[22];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[6].x), _Settings.w);
-				pos = p + PositionsBuffer[23];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[7].x), _Settings.w);
-			
-				// 24
-
-				pos = p + PositionsBuffer[24];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[8].x), _Settings.w);
-				pos = p + PositionsBuffer[25];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[9].x), _Settings.w);
-				pos = p + PositionsBuffer[26];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[10].x), _Settings.w);
-				pos = p + PositionsBuffer[27];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[11].x), _Settings.w);
-			
-				pos = p + PositionsBuffer[28];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[12].x), _Settings.w);
-				pos = p + PositionsBuffer[29];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[13].x), _Settings.w);
-				pos = p + PositionsBuffer[30];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[14].x), _Settings.w);
-				pos = p + PositionsBuffer[31];				  
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[15].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[0 + i],  ScaleBuffer[0 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[1 + i],  ScaleBuffer[1 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[2 + i],  ScaleBuffer[2 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[3 + i],  ScaleBuffer[3 + i].x), _Settings.w);
+														  					 
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[4 + i],  ScaleBuffer[4 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[5 + i],  ScaleBuffer[5 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[6 + i],  ScaleBuffer[6 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[7 + i],  ScaleBuffer[7 + i].x), _Settings.w);
+																			 
+				// 8														 
+																			 
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[8 + i],  ScaleBuffer[8 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[9 + i],  ScaleBuffer[9 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[10 + i], ScaleBuffer[10 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[11 + i], ScaleBuffer[11 + i].x), _Settings.w);
+																			  
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[12 + i], ScaleBuffer[12 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[13 + i], ScaleBuffer[13 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[14 + i], ScaleBuffer[14 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[15 + i], ScaleBuffer[15 + i].x), _Settings.w);
+																			  
+				// 16														  
+																			  
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[16 + i], ScaleBuffer[16 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[17 + i], ScaleBuffer[17 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[18 + i], ScaleBuffer[18 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[19 + i], ScaleBuffer[19 + i].x), _Settings.w);
+														  					  
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[20 + i], ScaleBuffer[20 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[21 + i], ScaleBuffer[21 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[22 + i], ScaleBuffer[22 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[23 + i], ScaleBuffer[23 + i].x), _Settings.w);
+																			  
+				// 24														  
+																			  
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[24 + i], ScaleBuffer[24 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[25 + i], ScaleBuffer[25 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[26 + i], ScaleBuffer[26 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[27 + i], ScaleBuffer[27 + i].x), _Settings.w);
+																			  
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[28 + i], ScaleBuffer[28 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[29 + i], ScaleBuffer[29 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[30 + i], ScaleBuffer[30 + i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[31 + i], ScaleBuffer[31 + i].x), _Settings.w);
 			
 				// 32
 
@@ -163,10 +135,10 @@
 
 			PositionsBuffer.GetDimensions(count, stride);
 
-			for(float i = 0; i < count; i++)
+			int i;
+			for(i = 0; i < count; i++)
 			{
-				float3 pos = p + PositionsBuffer[i];
-				scene = opSmoothUnion(scene, sphereSDF(pos, ScaleBuffer[i].x), _Settings.w);
+				scene = opSmoothUnion(scene, sphereSDF(p + PositionsBuffer[i], ScaleBuffer[i].x), _Settings.w);
 			}	
 			#endif
 
@@ -182,10 +154,9 @@
 
 		float sceneSDF(float3 p)
 		{
-			//float3 c = float3(3, 3, 3);
-			//float3 q = mod(p, c) - 0.5f * c;
-			//float scene = dropSetOf16(q);
-			return dropSetOf16(p);
+			// I might try to use some repetion technik here 
+			//return dropSetOf16(p, 0);
+			return min(dropSetOf16(p, 0), dropSetOf16(p, 32));
 			//return HavyScene(p);
 		}
 
@@ -194,10 +165,11 @@
 		{
 			float totalDistance = 0.0f;
 			int steps;
+			float distance; 
 			for (steps = 0; steps < _Settings.x; steps++)
 			{
 				p = from + totalDistance * direction;
-				float distance = sceneSDF(p);
+				distance = sceneSDF(p);
 				totalDistance += distance;
 
 				if (distance < _Settings.y)
@@ -208,6 +180,11 @@
 			return 1.0f - float(steps) / float(_Settings.x);
 		}
 
+
+		static const float3 xDir = float3(_Settings.y, 0.0f, 0.0f);
+		static const float3 yDir = float3(0.0f, _Settings.y, 0.0f);
+		static const float3 zDir = float3(0.0f, 0.0f, _Settings.y);
+			
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
@@ -221,17 +198,17 @@
             o.Albedo = finalColor;
             o.Alpha = step(length(p), 200) * _Color.a;
             
-			float3 xDir = float3(_Settings.y, 0.0f, 0.0f);
-			float3 yDir = float3(0.0f, _Settings.y, 0.0f);
-			float3 zDir = float3(0.0f, 0.0f, _Settings.y);
-					
+			//xDir = float3(_Settings.y, 0.0f, 0.0f);
+			//yDir = float3(0.0f, _Settings.y, 0.0f);
+			//zDir = float3(0.0f, 0.0f, _Settings.y);
+			
 			float3 norm = normalize(float3(
 				sceneSDF(p + xDir) - sceneSDF(p - xDir),
 				sceneSDF(p + yDir) - sceneSDF(p - yDir),
 				sceneSDF(p + zDir) - sceneSDF(p - zDir)));
 			
 			o.Normal = norm;
-
+			
 			// Rim
 			half rim = 1.0 - saturate(dot(viewDir, o	.Normal));
 			o.Emission = _RimColor.rgb * pow(rim, _RimPower);
